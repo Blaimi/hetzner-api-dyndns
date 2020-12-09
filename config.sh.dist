@@ -1,0 +1,7 @@
+#!/bin/bash
+auth_api_token=''
+record_ttl='60'
+record_type='AAAA'
+zone_id=''
+record_id=''
+record_name=''

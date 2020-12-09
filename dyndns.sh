@@ -1,10 +1,17 @@
 #!/bin/bash
-# DynDNS Script for Hetzner DNS API by FarrowStrange
+# DynDNS Script for Hetzner DNS API by FarrowStrange, extended by Blaimi
 # v1.0
+
+set -e
 
 auth_api_token=''
 record_ttl='60'
 record_type='A'
+pub_addr_api_v4='api.ipify.org'
+pub_addr_api_v6='api64.ipify.org'
+
+realpath=$(realpath $0)
+source ${realpath%/*}/config.sh
 
 display_help() {
   cat <<EOF
@@ -65,10 +72,10 @@ fi
 
 if [[ "${record_type}" = "AAAA" ]]; then
   echo "Using IPv6 as AAAA record is to be set."
-  cur_pub_addr=`curl -6 -s https://ifconfig.co`
+  cur_pub_addr=$(curl -6 -s ${pub_addr_api_v6})
 else
   echo "Using IPv4 as record type ${record_type} is not explicitly AAAA."
-  cur_pub_addr=`curl -4 -s https://ifconfig.co`
+  cur_pub_addr=$(curl -4 -s ${pub_addr_api_v4})
 fi
 
 cur_dyn_addr=`curl -s "https://dns.hetzner.com/api/v1/records/${record_id}" -H 'Auth-API-Token: '${auth_api_token} | cut -d ',' -f 4 | cut -d '"' -f 4`
